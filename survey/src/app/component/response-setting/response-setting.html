@@ -1,0 +1,210 @@
+<div class="page-container">
+  <div class="flex flex-content-between flex-items-center">
+    <h3 class="no-margin fw-500">Response Options</h3>
+    <button class="button primary-bg text-white" (click)="createResponse()">Create Options</button>
+  </div>
+  <div class="mt-15">
+    <table>
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Options</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (responseDetails().length) {
+          @for (item of responseDetails(); track item; let i = $index) {
+            <tr>
+              <td>
+                {{ $index + 1 }}
+              </td>
+              <td>{{ item.name }}</td>
+              <td>
+                @for (option of item.options; track option; let j = $index) {
+                  {{ option.name }}
+                  @if (j !== item.options?.length - 1) {
+                    <span>,</span>
+                  }
+                }
+              </td>
+              <td>
+                <div class="flex flex-items-center gap-10">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="18"
+                    viewBox="0 0 16 16"
+                    (click)="viewResponse(item)"
+                  >
+                    <path
+                      fill="gray"
+                      fill-rule="evenodd"
+                      d="M8 14.5c5.5 0 8-6.5 8-6.5s-2.5-6.5-8-6.5S0 8 0 8s2.5 6.5 8 6.5M8 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    (click)="editResponse(item)"
+                  >
+                    <path
+                      fill="gray"
+                      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z"
+                    />
+                  </svg>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    (click)="deleteResponseOptions(item.id)"
+                  >
+                    <path
+                      fill="rgb(244, 151, 151)"
+                      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM8 9h8v10H8zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                    />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+    @if (responseDetails().length === 0 && !pageLoader()) {
+      <div class="flex flex-column flex-content-center flex-items-center">
+        <img src="/no-data.png" width="200" height="200" class="rounded-50" />
+        <p>No response created yet!</p>
+      </div>
+    }
+    @if (pageLoader()) {
+      <div class="flex flex-content-center p-20">
+        <img src="/loading-spinner.gif" width="70" height="70" />
+      </div>
+    }
+  </div>
+</div>
+
+<ng-template #createResponseDialog let-data>
+  <div class="flex flex-column height-100">
+    <div class="flex flex-content-between flex-items-center p-15">
+      <h3 class="no-margin fw-500">
+        {{
+          data.action === 'View'
+            ? 'View Response Options'
+            : data.action === 'Edit'
+              ? 'Edit Response Options'
+              : 'Create Response Options'
+        }}
+      </h3>
+      <span class="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+
+    <div class="flex flex-column mt-10 invisible-scroll-container">
+      <form [formGroup]="responseOptionsForm" class="flex flex-column gap-15 py-20">
+        <div class="flex flex-column gap-5">
+          <p class="font-14">Name</p>
+          <input
+            id="name"
+            class="input-box"
+            [class.input-box-highlight]="!responseOptionsForm.get('name')?.hasError('required')"
+            [class.invalid-input-box]="
+              responseOptionsForm.get('name')?.hasError('required') &&
+              responseOptionsForm.get('name')?.touched
+            "
+            formControlName="name"
+            placeholder="Enter the response name"
+          />
+          @if (
+            responseOptionsForm.get('name')?.hasError('required') &&
+            responseOptionsForm.get('name')?.touched
+          ) {
+            <div class="error-msg">This field is required</div>
+          }
+        </div>
+
+        <div formArrayName="options">
+          <div class="flex flex-column gap-5">
+            <p class="font-14">
+              Options&nbsp;&nbsp;
+              @if (data.action !== 'View') {
+                <span class="primary pointer" (click)="pushOption()">Add</span>
+              }
+            </p>
+            @for (option of options.controls; track option; let i = $index) {
+              <div [formGroup]="option" class="flex flex-row gap-10 mt-5">
+                <input
+                  class="flex-grow-1 input-box"
+                  [class.input-box-highlight]="!option.get('name')?.hasError('required')"
+                  [class.invalid-input-box]="
+                    option.get('name')?.hasError('required') && option.get('name')?.touched
+                  "
+                  placeholder="Enter the option"
+                  formControlName="name"
+                />
+                @if (data.action !== 'View') {
+                  <span class="flex flex-content-center flex-items-center pointer">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 22 22"
+                      (click)="removeOption(i, option)"
+                    >
+                      <path
+                        stroke="#000000"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M18 6L6 18m12 0L6 6"
+                      />
+                    </svg>
+                  </span>
+                }
+              </div>
+              @if (option.get('name')?.hasError('required') && option.get('name')?.touched) {
+                <div class="error-msg">This field is required</div>
+              }
+            }
+          </div>
+        </div>
+      </form>
+    </div>
+    @if (data.action !== 'View') {
+      <div class="flex flex-content-center flex-items-center gap-10 px-10">
+        <button class="button" (click)="closeDialog()" [disabled]="isLoading()">Cancel</button>
+        <button
+          class="button primary-bg text-white"
+          (click)="
+            data.action === 'Edit' ? editResponseOptions(data.value.id) : saveResponseOptions()
+          "
+          [class.loading-button]="isLoading()"
+          [disabled]="isLoading()"
+        >
+          {{ data.action === 'Edit' ? 'Update' : 'Save' }}
+          @if (isLoading()) {
+            <app-loader class="absolute"></app-loader>
+          }
+        </button>
+      </div>
+    }
+  </div>
+</ng-template>

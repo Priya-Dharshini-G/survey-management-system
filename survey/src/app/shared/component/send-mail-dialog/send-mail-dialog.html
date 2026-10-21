@@ -1,0 +1,123 @@
+<div class="flex flex-column gap-15 p-15">
+  <div class="flex flex-content-between flex-items-center">
+    <p class="no-margin bold">Send Mail</p>
+    <span class="flex flex-items-center pointer" (click)="close()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+        <path
+          fill="none"
+          stroke="gray"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+          d="M18 6L6 18m12 0L6 6"
+        />
+      </svg>
+    </span>
+  </div>
+  <form [formGroup]="mailForm" class="flex flex-column gap-15">
+    <div class="flex flex-column gap-5">
+      <p class="font-14">Subject</p>
+      <input type="text" class="input-box" formControlName="subject" />
+    </div>
+
+    <div class="flex flex-column gap-5">
+      <p class="font-14">Send To</p>
+      <div class="flex flex-wrap flex-items-center gap-10 bb-gray pb-10">
+        @for (item of emails; track item; let i = $index) {
+          <div class="flex gap-10 flex-items-center rounded-20 border-gray px-5 py-10">
+            <p class="font-14">{{ item }}</p>
+            <span class="flex flex-items-center pointer" (click)="removeItem(i)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 22 22">
+                <path
+                  fill="none"
+                  stroke="gray"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M18 6L6 18m12 0L6 6"
+                />
+              </svg>
+            </span>
+          </div>
+        }
+        <input type="text" class="to-input" (keydown)="onKeyDown($event)" formControlName="to" />
+      </div>
+      @if (mailForm.get('to')?.hasError('required') && mailForm.get('to')?.touched) {
+        <div class="error-msg">This field is required</div>
+      }
+      @if (
+        !mailForm.get('to')?.hasError('required') &&
+        mailForm.get('to')?.touched &&
+        mailForm.get('to')?.hasError('pattern')
+      ) {
+        <div class="error-msg">Invalid Email</div>
+      }
+      <p class="font-14 primary pointer" (click)="selectGroup()">Choose from group</p>
+    </div>
+
+    <div class="flex flex-column gap-5">
+      <p class="font-14">Message</p>
+      <textarea
+        class="input-box"
+        formControlName="message"
+        [class.input-box-highlight]="!mailForm.get('message')?.hasError('required')"
+        [class.invalid-input-box]="
+          mailForm.get('message')?.hasError('required') && mailForm.get('message')?.touched
+        "
+      ></textarea>
+      @if (mailForm.get('message')?.hasError('required') && mailForm.get('message')?.touched) {
+        <div class="error-msg">This field is required</div>
+      }
+    </div>
+
+    <div class="flex flex-content-end gap-10">
+      <button type="button" class="button" (click)="close()">Cancel</button>
+      <button type="button" class="button primary-bg text-white" (click)="sendMail()">
+        Send Mail
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #groupsTemplate>
+  <div class="flex flex-column height-100" (click)="$event.stopPropagation()">
+    <div class="flex flex-content-between flex-items-center p-15">
+      <h3 class="no-margin">Choose the Group</h3>
+      <span className="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+    <div class="flex flex-column gap-15 invisible-scroll-container p-10">
+      @for (item of groupDetails(); track item; let i = $index) {
+        <div
+          class="flex flex-column gap-10 p-10 border-gray rounded-10 pointer hover-card"
+          [ngClass]="{ 'selected-group': isGroupSelected && i === selectedGroupIndex }"
+          (click)="selectedGroup(i)"
+        >
+          <p class="font-14 bold">{{ item.name }}</p>
+          <p class="font-14">Emails:</p>
+          <div class="flex flex-wrap gap-10">
+            @for (member of item.members; track member) {
+              <p class="font-14 rounded-20 border-gray px-5 py-10">
+                {{ member.email }}
+              </p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+    <div class="flex flex-content-end flex-items-center gap-10 p-10">
+      <button class="button" (click)="closeDialog()">Cancel</button>
+      <button class="button primary-bg text-white" (click)="addToEmails()">Ok</button>
+    </div>
+  </div>
+</ng-template>

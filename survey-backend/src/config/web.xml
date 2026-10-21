@@ -1,0 +1,253 @@
+<web-app>
+    <filter>
+        <filter-name>CrosFilter</filter-name>
+        <filter-class>filter.CrosFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CrosFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+     <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>controller.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TestConnectionServlet</servlet-name>
+        <servlet-class>controller.TestConnectionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestConnectionServlet</servlet-name>
+        <url-pattern>/testConnection</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateUserServlet</servlet-name>
+        <servlet-class>controller.CreateUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateUserServlet</servlet-name>
+        <url-pattern>/createUser</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>ForgotEmailServlet</servlet-name>
+        <servlet-class>controller.ForgotEmailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForgotEmailServlet</servlet-name>
+        <url-pattern>/forgotEmail</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>GetAllCategoryServlet</servlet-name>
+        <servlet-class>controller.GetAllCategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllCategoryServlet</servlet-name>
+        <url-pattern>/getAllCategory</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>CreateCategoryServlet</servlet-name>
+        <servlet-class>controller.CreateCategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateCategoryServlet</servlet-name>
+        <url-pattern>/createCategory</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UpdateCategoryServlet</servlet-name>
+        <servlet-class>controller.UpdateCategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateCategoryServlet</servlet-name>
+        <url-pattern>/updateCategory</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteCategoryServlet</servlet-name>
+        <servlet-class>controller.DeleteCategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteCategoryServlet</servlet-name>
+        <url-pattern>/deleteCategory</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GetOneCategoryServlet</servlet-name>
+        <servlet-class>controller.GetOneCategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetOneCategoryServlet</servlet-name>
+        <url-pattern>/getOneCategory</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAllSurveyServlet</servlet-name>
+        <servlet-class>controller.GetAllSurveyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllSurveyServlet</servlet-name>
+        <url-pattern>/getAllSurvey</url-pattern>
+    </servlet-mapping>
+
+      <servlet>
+        <servlet-name>GetSurveyServlet</servlet-name>
+        <servlet-class>controller.GetSurveyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetSurveyServlet</servlet-name>
+        <url-pattern>/getSurvey</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>CreateSurveyServlet</servlet-name>
+        <servlet-class>controller.CreateSurveyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateSurveyServlet</servlet-name>
+        <url-pattern>/createSurvey</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateSurveyServlet</servlet-name>
+        <servlet-class>controller.UpdateSurveyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateSurveyServlet</servlet-name>
+        <url-pattern>/updateSurvey</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteSurveyServlet</servlet-name>
+        <servlet-class>controller.DeleteSurveyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteSurveyServlet</servlet-name>
+        <url-pattern>/deleteSurvey</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAllOptionSettingServlet</servlet-name>
+        <servlet-class>controller.GetAllOptionSettingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllOptionSettingServlet</servlet-name>
+        <url-pattern>/getAllOptionSetting</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateOptionSettingServlet</servlet-name>
+        <servlet-class>controller.CreateOptionSettingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateOptionSettingServlet</servlet-name>
+        <url-pattern>/createOptionSetting</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>UpdateOptionSettingServlet</servlet-name>
+        <servlet-class>controller.UpdateOptionSettingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateOptionSettingServlet</servlet-name>
+        <url-pattern>/updateOptionSetting</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>DeleteOptionSettingServlet</servlet-name>
+        <servlet-class>controller.DeleteOptionSettingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteOptionSettingServlet</servlet-name>
+        <url-pattern>/deleteOptionSetting</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAllGroupServlet</servlet-name>
+        <servlet-class>controller.GetAllGroupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllGroupServlet</servlet-name>
+        <url-pattern>/getAllGroups</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateGroupServlet</servlet-name>
+        <servlet-class>controller.CreateGroupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateGroupServlet</servlet-name>
+        <url-pattern>/createGroups</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>UpdateGroupServlet</servlet-name>
+        <servlet-class>controller.UpdateGroupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateGroupServlet</servlet-name>
+        <url-pattern>/updateGroups</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>DeleteGroupServlet</servlet-name>
+        <servlet-class>controller.DeleteGroupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteGroupServlet</servlet-name>
+        <url-pattern>/deleteGroups</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>SaveUserResponseServlet</servlet-name>
+        <servlet-class>controller.SaveUserResponseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SaveUserResponseServlet</servlet-name>
+        <url-pattern>/saveSurveyResposne</url-pattern>
+    </servlet-mapping>
+
+      <servlet>
+        <servlet-name>GetUserResponseServlet</servlet-name>
+        <servlet-class>controller.GetUserResponseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetUserResponseServlet</servlet-name>
+        <url-pattern>/getSurveyResponse</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>ChangeStatusServlet</servlet-name>
+        <servlet-class>controller.ChangeStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeStatusServlet</servlet-name>
+        <url-pattern>/changeStatus</url-pattern>
+    </servlet-mapping>
+      <servlet>
+        <servlet-name>CheckEmailServlet</servlet-name>
+        <servlet-class>controller.CheckEmailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckEmailServlet</servlet-name>
+        <url-pattern>/checkEmail</url-pattern>
+    </servlet-mapping>
+
+    
+      <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>controller.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/changePassword</url-pattern>
+    </servlet-mapping>
+</web-app>

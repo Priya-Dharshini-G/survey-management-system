@@ -1,0 +1,43 @@
+<div class="flex flex-column gap-15 p-15">
+  <div class="flex flex-content-between flex-items-center">
+    <p class="no-margin bold">Copy or Share the Survey</p>
+    <span class="flex flex-items-center pointer" (click)="close()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+        <path
+          fill="none"
+          stroke="gray"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+          d="M18 6L6 18m12 0L6 6"
+        />
+      </svg>
+    </span>
+  </div>
+  <div class="flex flex-column gap-10">
+    <div class="flex flex-items-center gap-10">
+      <input
+        id="form-link"
+        type="text"
+        class="input-box flex-grow-1"
+        [value]="data.link"
+        [disabled]="data.link"
+      />
+      <div class="pointer" #tooltip="matTooltip" (click)="copyLink()" matTooltip="Copy">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path
+            fill="currentColor"
+            d="M9.116 17q-.691 0-1.153-.462T7.5 15.385V4.615q0-.69.463-1.153T9.116 3h7.769q.69 0 1.153.462t.462 1.153v10.77q0 .69-.462 1.152T16.884 17zm0-1h7.769q.23 0 .423-.192t.192-.423V4.615q0-.23-.192-.423T16.884 4H9.116q-.231 0-.424.192t-.192.423v10.77q0 .23.192.423t.423.192m-3 4q-.69 0-1.153-.462T4.5 18.385V6.615h1v11.77q0 .23.192.423t.423.192h8.77v1zM8.5 16V4z"
+          />
+        </svg>
+      </div>
+    </div>
+    <p class="font-14">
+      Send the link through email.&nbsp;&nbsp;<span
+        class="primary pointer"
+        (click)="showEmailDialog()"
+        >Send Email</span
+      >
+    </p>
+  </div>
+</div>

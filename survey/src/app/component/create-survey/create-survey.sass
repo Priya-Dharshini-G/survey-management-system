@@ -1,0 +1,49 @@
+input[type="checkbox"]
+    width: 16px
+    height: 16px
+
+textarea
+    scrollbar-width: none
+    height: 80px
+    font-size: 15px
+    font-weight: normal
+    font-family: system-ui
+
+.top-layer
+    display: flex
+    gap: 30px
+    justify-content: space-between
+
+.hover-card:hover
+    outline: 1.5px solid rgb(104, 203, 242)
+    box-shadow: 0px 1px 3px 0px #cfcfcf
+    
+.selected-type
+    outline: 1.5px solid rgb(104, 203, 242)
+    box-shadow: 0px 1px 3px 0px #cfcfcf
+    background-color: whitesmoke
+
+.input-width
+    width: 50%
+
+.card-width
+    width: 45%
+
+@media screen and (max-width:768px)
+    .card-width
+        width: 100%
+
+@media screen and (min-width:600px) and (max-width:916px)
+    .input-width
+        width: 80%
+
+@media screen and (max-width:600px)
+    .input-width
+        width: 100%
+
+@media screen and (max-width: 916px)
+    .top-layer
+        display: flex
+        flex-direction: column
+        gap: 20px
+

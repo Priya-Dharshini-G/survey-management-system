@@ -1,0 +1,22 @@
+<div class="flex flex-column">
+  <div class="flex flex-content-between flex-items-center p-15">
+    <h3 class="no-margin">{{ data.title }}</h3>
+    <span class="flex flex-items-center pointer" (click)="onClose(false)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+        <path
+          fill="none"
+          stroke="gray"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+          d="M18 6L6 18m12 0L6 6"
+        />
+      </svg>
+    </span>
+  </div>
+  <div class="py-15">{{ data.message }}</div>
+  <div class="flex flex-content-end gap-10 p-10">
+    <button class="button" (click)="onClose(false)">No</button>
+    <button class="button primary-bg text-white" (click)="onClose(true)">Yes</button>
+  </div>
+</div>

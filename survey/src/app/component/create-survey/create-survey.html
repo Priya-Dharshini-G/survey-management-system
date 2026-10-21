@@ -1,0 +1,484 @@
+@if (!isPreview) {
+  <div class="page-container">
+    <div class="flex flex-content-between flex-items-center">
+      <div class="flex flex-items-center gap-5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          viewBox="0 0 512 512"
+          (click)="navigateToSurveyCategories()"
+          class="pointer"
+        >
+          <path
+            fill="none"
+            stroke="gray"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="32"
+            d="M249.38 336L170 256l79.38-80m-68.35 80H342"
+          />
+          <path
+            fill="none"
+            stroke="gray"
+            stroke-miterlimit="10"
+            stroke-width="32"
+            d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192Z"
+          />
+        </svg>
+        <h3 class="no-margin">{{ isUpdate() ? 'Edit Survey' : 'Create Survey' }}</h3>
+      </div>
+      <div class="flex gap-10">
+        <button
+          class="button primary-bg text-white"
+          (click)="isUpdate() ? editSurvey() : saveSurvey()"
+          [class.loading-button]="isLoading().btn1 || isLoading().btn2"
+          [disabled]="isLoading().btn1 || isLoading().btn2"
+        >
+          {{ isUpdate() ? 'Update' : 'Save' }}
+          @if (isLoading().btn1) {
+            <app-loader class="absolute"></app-loader>
+          }
+        </button>
+        <button
+          class="button primary-bg text-white"
+          (click)="isUpdate() ? editAndPublish() : saveAndPublish()"
+          [class.loading-button]="isLoading().btn1 || isLoading().btn2"
+          [disabled]="isLoading().btn1 || isLoading().btn2"
+        >
+          {{ isUpdate() ? 'Update & Publish' : 'Save & Publish' }}
+          @if (isLoading().btn2) {
+            <app-loader class="absolute"></app-loader>
+          }
+        </button>
+        <button
+          class="button"
+          (click)="preview()"
+          [disabled]="isLoading().btn1 || isLoading().btn2"
+        >
+          Preview
+        </button>
+      </div>
+    </div>
+    @if (surveyForm) {
+      <form [formGroup]="surveyForm" class="flex flex-column gap-20 mt-15">
+        <div class="top-layer">
+          <div class="flex flex-column gap-20 input-width">
+            <div class="flex flex-column gap-5">
+              <p class="font-14">Survey Title</p>
+              <input
+                id="name"
+                class="input-box"
+                [class.input-box-highlight]="!surveyForm.get('name')?.hasError('required')"
+                [class.invalid-input-box]="
+                  surveyForm.get('name')?.hasError('required') && surveyForm.get('name')?.touched
+                "
+                formControlName="name"
+                placeholder="Enter the survey title"
+              />
+              @if (
+                surveyForm.get('name')?.hasError('required') && surveyForm.get('name')?.touched
+              ) {
+                <div class="error-msg">This field is required</div>
+              }
+            </div>
+            <div class="flex flex-column gap-5">
+              <p class="font-14">Description / Instruction</p>
+              <textarea
+                id="description"
+                class="input-box input-box-highlight"
+                formControlName="description"
+                placeholder="Enter the description of the survey"
+              ></textarea>
+            </div>
+          </div>
+          <div class="flex flex-column gap-5 input-width">
+            <p class="font-14 mb-10">What are the user details you want to get from the users?</p>
+            <div class="flex mb-10">
+              <div class="flex gap-10 width-50">
+                <div class="flex flex-items-center gap-5">
+                  <input
+                    type="checkbox"
+                    formControlName="userName"
+                    (change)="selectedUserDetail($event, 'userNameReq')"
+                  />
+                  <p class="font-14">User Name</p>
+                </div>
+                <mat-slide-toggle
+                  formControlName="userNameReq"
+                  (change)="selectedToggle($event, 'userName')"
+                >
+                  <p class="font-12">Required</p></mat-slide-toggle
+                >
+              </div>
+              <div class="flex gap-10 width-50">
+                <div class="flex flex-items-center gap-5">
+                  <input
+                    type="checkbox"
+                    formControlName="email"
+                    (change)="selectedUserDetail($event, 'emailReq')"
+                  />
+                  <p class="font-14">Email</p>
+                </div>
+                <mat-slide-toggle
+                  formControlName="emailReq"
+                  (change)="selectedToggle($event, 'email')"
+                >
+                  <p class="font-12">Required</p></mat-slide-toggle
+                >
+              </div>
+            </div>
+            <div class="flex mb-10">
+              <div class="flex gap-10 width-50">
+                <div class="flex flex-items-center gap-5">
+                  <input
+                    type="checkbox"
+                    formControlName="dob"
+                    (change)="selectedUserDetail($event, 'dobReq')"
+                  />
+                  <p class="font-14">Date of Birth</p>
+                </div>
+                <mat-slide-toggle formControlName="dobReq" (change)="selectedToggle($event, 'dob')">
+                  <p class="font-12">Required</p></mat-slide-toggle
+                >
+              </div>
+              <div class="flex gap-10 width-50">
+                <div class="flex flex-items-center gap-5">
+                  <input
+                    type="checkbox"
+                    formControlName="phoneNo"
+                    (change)="selectedUserDetail($event, 'phoneNoReq')"
+                  />
+                  <p class="font-14">Phone Number</p>
+                </div>
+                <mat-slide-toggle
+                  formControlName="phoneNoReq"
+                  (change)="selectedToggle($event, 'phoneNo')"
+                >
+                  <p class="font-12">Required</p></mat-slide-toggle
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-column gap-10">
+          <div class="flex flex-content-between flex-items-center gap-10">
+            <p class="font-14">
+              Survey Questions &nbsp;&nbsp;<span
+                class="font-14 primary pointer"
+                (click)="openDialog()"
+                >Add Default Questions</span
+              >
+            </p>
+            @if (questions.controls.length > 1) {
+              <div class="flex flex-items-center gap-5">
+                <input type="checkbox" (change)="isAllRequired($event)" />
+                <p class="font-14">Mark as All required</p>
+              </div>
+            }
+          </div>
+
+          <div class="flex flex-wrap gap-20">
+            @for (question of questions.controls; track question; let i = $index) {
+              <div class="flex flex-column p-10 border-gray rounded-10 gap-15 card-width">
+                <div class="flex flex-content-between flex-items-center">
+                  <p class="font-14 bold">Question ({{ i + 1 }})</p>
+                  <span
+                    className="flex flex-items-center pointer"
+                    (click)="removeQuestion(i, question.value.id)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        fill="none"
+                        stroke="gray"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M18 6L6 18m12 0L6 6"
+                      />
+                    </svg>
+                  </span>
+                </div>
+
+                <div [formGroup]="question" class="flex flex-column gap-10">
+                  <div class="flex flex-items-center gap-5">
+                    <input
+                      type="checkbox"
+                      value="question.get('isrequired').value"
+                      formControlName="isrequired"
+                      (change)="isRequired($event, i)"
+                    />
+                    <p class="font-14">Mark as required</p>
+                  </div>
+
+                  <div class="flex flex-column gap-5">
+                    <p htmlFor="question" class="font-14">Question</p>
+                    <textarea
+                      id="question"
+                      class="input-box"
+                      [class.input-box-highlight]="!question.get('question')?.hasError('required')"
+                      [class.invalid-input-box]="
+                        question.get('question')?.hasError('required') &&
+                        question.get('question')?.touched
+                      "
+                      formControlName="question"
+                      placeholder="Enter the question"
+                    ></textarea>
+                    @if (
+                      question.get('question')?.hasError('required') &&
+                      question.get('question')?.touched
+                    ) {
+                      <div class="error-msg">This field is required</div>
+                    }
+                  </div>
+
+                  <div class="flex flex-column gap-5">
+                    <p htmlFor="type" class="font-14">Answer Type</p>
+                    <div class="width-95">
+                      <mat-select
+                        id="type"
+                        class="input-box"
+                        [class.input-box-highlight]="!question.get('type')?.hasError('required')"
+                        [class.invalid-input-box]="
+                          question.get('type')?.hasError('required') &&
+                          question.get('type')?.touched
+                        "
+                        formControlName="type"
+                        (selectionChange)="selectedAswerType($event, i)"
+                      >
+                        @for (option of responseType; track option) {
+                          <mat-option [value]="option.name">{{ option.label }}</mat-option>
+                        }
+                      </mat-select>
+                    </div>
+                    @if (
+                      question.get('type')?.hasError('required') && question.get('type')?.touched
+                    ) {
+                      <div class="error-msg">This field is required</div>
+                    }
+                  </div>
+
+                  @if (getType(i) === 'Star' || getType(i) === 'Number') {
+                    <div class="flex flex-column gap-5">
+                      <p htmlFor="answerType" class="font-14">
+                        Range&nbsp;&nbsp;<span class="font-14 gray"
+                          >(Provide the rating range)</span
+                        >
+                      </p>
+                      <div class="width-95">
+                        <mat-select
+                          id="rate"
+                          class="input-box"
+                          [class.input-box-highlight]="!question.get('rate')?.hasError('required')"
+                          [class.invalid-input-box]="
+                            question.get('rate')?.hasError('required') &&
+                            question.get('rate')?.touched
+                          "
+                          formControlName="rate"
+                        >
+                          <mat-option [value]="5">Out of 5</mat-option>
+                          <mat-option [value]="10">Out of 10</mat-option>
+                        </mat-select>
+                      </div>
+                      @if (
+                        question.get('rate')?.hasError('required') && question.get('rate')?.touched
+                      ) {
+                        <div class="error-msg">This field is required</div>
+                      }
+                    </div>
+                  }
+
+                  @if (
+                    getType(i) !== 'Comment' &&
+                    (getType(i) === 'select-one' || getType(i) === 'select-multiple')
+                  ) {
+                    <div class="flex flex-column gap-5">
+                      <p htmlFor="options" class="font-14">
+                        Options &nbsp;(<span class="primary pointer" (click)="pushOption(i)"
+                          >Add</span
+                        >&nbsp;or&nbsp;<span
+                          class="primary pointer"
+                          (click)="openDialog('ViewAnswerType', i)"
+                          >Pick from library</span
+                        >)
+                      </p>
+
+                      <div class="flex flex-column gap-10">
+                        @for (option of getOptions(i).controls; track option; let j = $index) {
+                          <div class="flex flex-column gap-10">
+                            <div [formGroup]="option" class="flex gap-10">
+                              <input
+                                id="name"
+                                class="input-box flex-grow-1"
+                                [class.input-box-highlight]="
+                                  !option.get('name')?.hasError('required')
+                                "
+                                [class.invalid-input-box]="
+                                  option.get('name')?.hasError('required') &&
+                                  option.get('name')?.touched
+                                "
+                                formControlName="name"
+                                placeholder="Enter the option"
+                              />
+                              @if (j >= 1) {
+                                <span
+                                  class="flex flex-items-center pointer"
+                                  (click)="removeOption(i, j, option.value.id)"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 22 22"
+                                  >
+                                    <path
+                                      fill="none"
+                                      stroke="gray"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="1.5"
+                                      d="M18 6L6 18m12 0L6 6"
+                                    />
+                                  </svg>
+                                </span>
+                              }
+                            </div>
+                            @if (
+                              option.get('name')?.hasError('required') &&
+                              option.get('name')?.touched
+                            ) {
+                              <div class="error-msg">This field is required</div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <div>
+            <button class="button primary-bg text-white" (click)="pushQuestion()">
+              Add Question
+            </button>
+          </div>
+        </div>
+      </form>
+    }
+  </div>
+} @else {
+  <app-preview-survey
+    [survey]="surveyForm.value"
+    (setPreview)="setPreviewValue($event)"
+  ></app-preview-survey>
+}
+
+<ng-template #dialogTemplate let-data>
+  <div class="flex flex-column height-100">
+    <div class="flex flex-content-between flex-items-center p-15 border-gray">
+      <h3 class="no-margin">
+        {{ data.action ? 'Choose the response option' : 'Add Default Questions' }}
+      </h3>
+      <span className="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+
+    @if (data.action) {
+      @if (responseDetails().length) {
+        <div class="flex flex-column gap-10 invisible-scroll-container p-10">
+          @for (item of responseDetails(); track item; let i = $index) {
+            <div
+              class="flex flex-column gap-10 p-10 border-gray rounded-10 pointer hover-card"
+              [ngClass]="{ 'selected-type': isSelectedOption && selectedOption === i }"
+              (click)="selectedType(i)"
+            >
+              <h4 class="no-margin">{{ item.name }}</h4>
+              <div>
+                <p class="font-14 gray mb-5">Options</p>
+                @for (option of item.options; track option) {
+                  <p class="px-5 py-10 rounded-5 bg-light-gray mb-5">{{ option.name }}</p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="flex flex-column flex-content-center flex-items-center">
+          <img src="/no-data.png" width="170" height="170" class="rounded-50" />
+          <p class="text-align-center font-14 gray">No options created yet!</p>
+        </div>
+      }
+    } @else {
+      <div class="flex flex-column p-10 gap-10 invisible-scroll-container">
+        @for (ques of defaultQuestions(); track ques; let i = $index) {
+          <div class="flex flex-items-center p-10 gap-10 border-gray rounded-10">
+            <input type="checkbox" (change)="selectedQuestion($event, i)" />
+            <p>{{ ques.question }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    @if (data.action) {
+      @if (responseDetails().length) {
+        <div class="flex flex-content-end flex-items-center gap-10 p-10 border-gray">
+          <button class="button" (click)="closeDialog()">Cancel</button>
+          <button class="button primary-bg text-white" (click)="addOptions()">Ok</button>
+        </div>
+      }
+    } @else {
+      <div class="flex flex-content-end flex-items-center gap-10 p-10 border-gray">
+        <button class="button" (click)="closeDialog()">Cancel</button>
+        <button class="button primary-bg text-white" (click)="addQuestions()">Add</button>
+      </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #confirmationTemplate>
+  <div class="flex flex-column">
+    <div class="flex flex-content-between flex-items-center p-15">
+      <h3 class="no-margin">Confirmation</h3>
+      <span class="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+    <div class="py-15">
+      <p class="mb-10">Are you sure you want to publish this survey?</p>
+      <p class="font-14 bg-light-gray p-10 rounded-10">
+        Once it's published, you can't edit this survey anymore.
+      </p>
+    </div>
+    <div class="flex flex-content-end gap-10 p-10">
+      <button class="button" (click)="onClose(false)">No</button>
+      <button class="button primary-bg text-white" (click)="onClose(true)">Yes</button>
+    </div>
+  </div>
+</ng-template>

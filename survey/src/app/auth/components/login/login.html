@@ -1,0 +1,97 @@
+<div class="flex flex-items-center flex-content-center height-100">
+  <div class="flex flex-column gap-15 box-shadow rounded-20 p-20 width-40">
+    <div class="flex flex-items-center flex-content-center gap-4 pointer">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 48 48"
+        class="mt-5"
+      >
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m14.597 17.362l.851 2.619h2.753l-2.227 1.618l.851 2.619l-2.228-1.618l-2.228 1.618l.851-2.619l-2.228-1.618h2.754zm9.403 0l.851 2.619h2.754l-2.228 1.618l.851 2.619L24 22.6l-2.228 1.618l.851-2.619l-2.228-1.618h2.754zm9.403 0l.851 2.619h2.754l-2.228 1.618l.851 2.619l-2.228-1.618l-2.228 1.618l.851-2.619l-2.227-1.618h2.753z"
+        />
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M39.284 8.669H8.716A4.216 4.216 0 0 0 4.5 12.885v15.81a4.216 4.216 0 0 0 4.216 4.217h10.905l3.37 5.837a1.164 1.164 0 0 0 2.017 0l3.37-5.837h10.906a4.216 4.216 0 0 0 4.216-4.217v-15.81a4.216 4.216 0 0 0-4.216-4.217"
+        />
+      </svg>
+      <h2 class="no-margin">Survey</h2>
+    </div>
+
+    <form [formGroup]="loginForm" class="flex flex-column gap-10">
+      <div class="flex flex-column gap-5">
+        <p class="font-14">Email</p>
+        <input
+          id="email"
+          class="input-box"
+          [class.input-box-highlight]="!loginForm.get('email')?.hasError('required')"
+          [class.invalid-input-box]="
+            (loginForm.get('email')?.hasError('required') ||
+              loginForm.get('email')?.hasError('pattern')) &&
+            loginForm.get('email')?.touched
+          "
+          formControlName="email"
+          placeholder="Enter the email"
+        />
+        @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+          <div class="error-msg">This field is required</div>
+        }
+        @if (
+          !loginForm.get('email')?.hasError('required') &&
+          loginForm.get('email')?.hasError('pattern') &&
+          loginForm.get('email')?.touched
+        ) {
+          <div class="error-msg">Invalid Email</div>
+        }
+      </div>
+      <div class="flex flex-column gap-5">
+        <div class="flex flex-content-between flex-items-center">
+          <p class="font-14">Password</p>
+          <p class="font-14 primary pointer" routerLink="/forgot-password">Forgot Password ?</p>
+        </div>
+
+        <input
+          id="password"
+          type="password"
+          class="input-box"
+          [class.input-box-highlight]="!loginForm.get('password')?.hasError('required')"
+          [class.invalid-input-box]="
+            loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched
+          "
+          formControlName="password"
+          placeholder="Enter the password"
+          (keydown)="onKeyDown($event)"
+        />
+        @if (
+          loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched
+        ) {
+          <div class="error-msg">This field is required</div>
+        }
+      </div>
+    </form>
+    <div class="flex flex-column flex-items-center flex-content-center gap-10">
+      <button
+        class="button primary-bg text-white width-30"
+        (click)="login()"
+        [class.loading-button]="isLoading"
+        [disabled]="isLoading"
+      >
+        Login
+        @if (isLoading) {
+          <app-loader class="absolute"></app-loader>
+        }
+      </button>
+      <p class="font-14">
+        Don't have an account? <span class="primary pointer" routerLink="/sign-up">Sign Up</span>
+      </p>
+    </div>
+  </div>
+</div>

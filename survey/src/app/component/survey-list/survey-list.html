@@ -1,0 +1,239 @@
+<div class="page-container">
+  <div class="flex flex-content-between">
+    <div>
+      <h3 class="no-margin fw-500">{{ categoryData()?.name }}</h3>
+      <p class="sub-text">Surveys for this particular category is shown in this page.</p>
+    </div>
+    <button class="button primary-bg text-white" (click)="navigateToCreateSurvey()">
+      Create Survey
+    </button>
+  </div>
+  <div class="mt-20">
+    {{ categoryData()?.questions?.length }} default questions.
+    <span class="primary pointer hover-bold" (click)="openQuestionDialog()">Click to view</span>
+  </div>
+  <div class="mt-20 border-gray rounded-5 box-shadow">
+    <mat-tab-group (selectedTabChange)="selectTab($event)">
+      @for (tab of tabs; track tab) {
+        <mat-tab [label]="tab">
+          @if (pageLoader()) {
+            <div class="flex flex-content-center p-20">
+              <img src="/loading-spinner.gif" width="70" height="70" />
+            </div>
+          }
+          @if (survey().length === 0 && !pageLoader()) {
+            <div class="flex flex-column flex-content-center flex-items-center p-30">
+              <img src="/no-data.png" width="200" height="200" class="rounded-50" />
+              <p>No survey created yet!</p>
+            </div>
+          } @else {
+            <div class="flex flex-wrap gap-20 p-30">
+              @for (item of survey(); track item.id) {
+                <div class="flex flex-column gap-10 card">
+                  <div class="flex flex-content-between flex-items-center">
+                    <div class="flex flex-column">
+                      <p class="font-15 bold">{{ item.name }}</p>
+                      <p class="gray font-12">
+                        Created at {{ item.created_at | date: 'yyyy-MM-dd' }}
+                      </p>
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      [matMenuTriggerFor]="menu"
+                    >
+                      <g fill="none" stroke="gray" strokeWidth="1.5">
+                        <circle cx="12" cy="4" r="1" transform="rotate(90 12 4)" />
+                        <circle cx="10" cy="12" r="1" transform="rotate(90 12 12)" />
+                        <circle cx="8" cy="20" r="1" transform="rotate(90 12 20)" />
+                      </g>
+                    </svg>
+                    <mat-menu #menu="matMenu">
+                      @if (tab === 'Draft') {
+                        <div mat-menu-item (click)="openViewSurvey(item)">View</div>
+                        <div mat-menu-item (click)="navigateToEditSurvey(item.id)">Edit</div>
+                        <div mat-menu-item (click)="deleteSurvey(item.id)">Delete</div>
+                      }
+                      @if (tab === 'Published') {
+                        <div mat-menu-item (click)="changeStatus('Closed', item.id)">
+                          Move to Closed
+                        </div>
+                      }
+                      @if (tab === 'Closed') {
+                        <div mat-menu-item (click)="deleteSurvey(item.id)">Delete</div>
+                      }
+                    </mat-menu>
+                  </div>
+                  <div class="flex flex-row flex-content-between">
+                    <div class="flex flex-column">
+                      <p>
+                        @if (tab === 'Draft') {
+                          {{ item.questions.length }}
+                          {{ item.questions.length > 1 ? 'Questions' : 'Question' }}
+                        } @else {
+                          {{ item?.responseCount }}
+                          {{ item.responseCount > 1 ? 'response' : 'responses' }}
+                        }
+                      </p>
+                      <p class="font-12 gray">
+                        {{ tab === 'Draft' ? 'No of questions' : 'No of responses' }}
+                      </p>
+                    </div>
+                    <div
+                      class="flex flex-content-center flex-items-center gap-4 pointer launch-btn popup"
+                      (click)="
+                        tab === 'Draft'
+                          ? publishSurvey('Published', item.id, item.name)
+                          : navigateToViewResponse(item.id)
+                      "
+                    >
+                      @if (tab === 'Draft') {
+                        <p class="font-14">Publish</p>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M12.5 18s6-4.419 6-6s-6-6-6-6m-7 12s6-4.419 6-6s-6-6-6-6"
+                          />
+                        </svg>
+                      } @else {
+                        @if (item.responseCount >= 1) {
+                          <p class="font-14">View Response</p>
+                        }
+                      }
+                    </div>
+                  </div>
+                  @if (tab === 'Published') {
+                    <div class="flex flex-items-center gap-10">
+                      <p
+                        id="copy-text-{{ item.id }}"
+                        class="font-13 p-10 form-link border-gray rounded-10"
+                      >
+                        {{ link }}survey/user-response/{{ item.surveyLink }}
+                      </p>
+                      <div
+                        class="pointer"
+                        #tooltip="matTooltip"
+                        (click)="copyLink(item.id)"
+                        matTooltip="{{ message }}"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M9.116 17q-.691 0-1.153-.462T7.5 15.385V4.615q0-.69.463-1.153T9.116 3h7.769q.69 0 1.153.462t.462 1.153v10.77q0 .69-.462 1.152T16.884 17zm0-1h7.769q.23 0 .423-.192t.192-.423V4.615q0-.23-.192-.423T16.884 4H9.116q-.231 0-.424.192t-.192.423v10.77q0 .23.192.423t.423.192m-3 4q-.69 0-1.153-.462T4.5 18.385V6.615h1v11.77q0 .23.192.423t.423.192h8.77v1zM8.5 16V4z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </mat-tab>
+      }
+    </mat-tab-group>
+  </div>
+</div>
+
+<ng-template #questionDialog>
+  <div class="flex flex-column height-100">
+    <div class="flex flex-content-between flex-items-center p-15 border-gray">
+      <h3 class="no-margin fw-500">View default questions</h3>
+      <span className="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+    <div class="flex flex-column p-20 gap-10 invisible-scroll-container">
+      @for (q of categoryData()?.questions; track q; let i = $index) {
+        <div class="flex p-10 border-gray rounded-10">
+          <p>
+            <span>{{ i + 1 }}.&nbsp;&nbsp;</span>{{ q.question }}
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #viewSurvey let-data>
+  <div class="flex flex-column height-100">
+    <div class="flex flex-content-between flex-items-center p-15 border-gray">
+      <h3 class="no-margin">{{ data.name }}</h3>
+      <span className="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+    <div class="flex flex-column p-20 gap-10 invisible-scroll-container">
+      @if (data.description) {
+        <div class="bg-light-gray p-10 rounded-10">
+          <p class="font-14 gray">Description</p>
+          <p class="font-14 mt-5">{{ data.description }}</p>
+        </div>
+      }
+
+      <p class="font-14">Questions</p>
+      <div class="flex flex-column gap-20">
+        @for (item of data.questions; track item; let i = $index) {
+          <div class="flex gap-10 border-gray p-10">
+            <p>{{ i + 1 }}.</p>
+            <div class="flex flex-column gap-10">
+              <p>{{ item.question }}</p>
+              <div class="flex gap-5">
+                <p class="gray font-14">Response Type</p>
+                <span>{{ item.type }}</span>
+              </div>
+              @if (item.type === 'Star' || item.type === 'Number') {
+                <div class="flex gap-5">
+                  <p class="gray font-14">Rating Range</p>
+                  <span>{{ item.rate }}</span>
+                </div>
+              }
+              @if (item.type === 'select-multiple' || item.type === 'select-one') {
+                <div class="flex gap-5">
+                  <p class="gray font-14">Options</p>
+                  @for (option of item.options; track option; let i = $index) {
+                    <span>{{ option.name }}{{ i !== item.options.length - 1 ? ',' : '.' }} </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

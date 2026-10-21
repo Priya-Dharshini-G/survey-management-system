@@ -1,0 +1,19 @@
+# Java compiled files
+*.class
+
+# Build output
+build/
+target/
+
+# Local server files
+logs/
+temp/
+work/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# IDE settings
+.idea/

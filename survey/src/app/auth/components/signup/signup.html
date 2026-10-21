@@ -1,0 +1,221 @@
+<div class="flex flex-column flex-items-center flex-content-center height-100">
+  <div class="flex gap-30 box-shadow rounded-20 p-20 width-70">
+    <div class="flex flex-column gap-15 flex-40">
+      <div class="flex gap-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 48 48"
+          class="mt-5"
+        >
+          <path
+            fill="none"
+            stroke="black"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m14.597 17.362l.851 2.619h2.753l-2.227 1.618l.851 2.619l-2.228-1.618l-2.228 1.618l.851-2.619l-2.228-1.618h2.754zm9.403 0l.851 2.619h2.754l-2.228 1.618l.851 2.619L24 22.6l-2.228 1.618l.851-2.619l-2.228-1.618h2.754zm9.403 0l.851 2.619h2.754l-2.228 1.618l.851 2.619l-2.228-1.618l-2.228 1.618l.851-2.619l-2.227-1.618h2.753z"
+          />
+          <path
+            fill="none"
+            stroke="black"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M39.284 8.669H8.716A4.216 4.216 0 0 0 4.5 12.885v15.81a4.216 4.216 0 0 0 4.216 4.217h10.905l3.37 5.837a1.164 1.164 0 0 0 2.017 0l3.37-5.837h10.906a4.216 4.216 0 0 0 4.216-4.217v-15.81a4.216 4.216 0 0 0-4.216-4.217"
+          />
+        </svg>
+        <h2 class="no-margin">Survey</h2>
+      </div>
+      <div
+        class="flex flex-column gap-10 flex-grow-1 primary-bg text-white font-14 p-20 rounded-20"
+      >
+        <p>
+          1. To empower individuals and organizations to collect meaningful feedback effortlessly.
+        </p>
+        <p>2. By providing a simple, flexible, and accessible survey platform.</p>
+        <p>
+          3. To make survey creation, distribution, and response collection seamless, enabling
+          better decisions through actionable insights.
+        </p>
+        <p>
+          4. To become the go-to platform for feedback and engagement, fostering a culture of
+          continuous improvement across businesses, communities, and institutions.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-column gap-15 flex-60">
+      <h3 class="no-margin">Sign Up Form!</h3>
+      <form [formGroup]="signupForm" class="flex flex-column gap-10">
+        <div class="flex flex-column gap-5">
+          <p class="font-14">First Name</p>
+          <input
+            id="firstName"
+            class="input-box"
+            [class.input-box-highlight]="!signupForm.get('firstName')?.hasError('required')"
+            [class.invalid-input-box]="
+              (signupForm.get('firstName')?.hasError('required') ||
+                signupForm.get('firstName')?.hasError('pattern')) &&
+              signupForm.get('firstName')?.touched
+            "
+            formControlName="firstName"
+            placeholder="Enter the first name"
+          />
+          @if (
+            signupForm.get('firstName')?.hasError('required') &&
+            signupForm.get('firstName')?.touched
+          ) {
+            <div class="error-msg">This field is required</div>
+          }
+          @if (
+            !signupForm.get('firstName')?.hasError('required') &&
+            signupForm.get('firstName')?.hasError('pattern') &&
+            signupForm.get('firstName')?.touched
+          ) {
+            <div class="error-msg">Only letters are allowed</div>
+          }
+        </div>
+
+        <div class="flex flex-column gap-5">
+          <p class="font-14">Last Name</p>
+          <input
+            id="lastName"
+            class="input-box"
+            [class.input-box-highlight]="!signupForm.get('lastName')?.hasError('required')"
+            [class.invalid-input-box]="
+              (signupForm.get('lastName')?.hasError('required') ||
+                signupForm.get('lastName')?.hasError('pattern')) &&
+              signupForm.get('lastName')?.touched
+            "
+            formControlName="lastName"
+            placeholder="Enter the last name"
+          />
+          @if (
+            signupForm.get('lastName')?.hasError('required') && signupForm.get('lastName')?.touched
+          ) {
+            <div class="error-msg">This field is required</div>
+          }
+          @if (
+            !signupForm.get('lastName')?.hasError('required') &&
+            signupForm.get('lastName')?.hasError('pattern') &&
+            signupForm.get('lastName')?.touched
+          ) {
+            <div class="error-msg">Only letters are allowed</div>
+          }
+        </div>
+
+        <div class="flex flex-column gap-5">
+          <p class="font-14">Email</p>
+          <input
+            id="email"
+            class="input-box"
+            [class.input-box-highlight]="!signupForm.get('email')?.hasError('required')"
+            [class.invalid-input-box]="
+              (signupForm.get('email')?.hasError('required') ||
+                signupForm.get('email')?.hasError('pattern') ||
+                signupForm.get('email')?.hasError('emailExists')) &&
+              signupForm.get('email')?.touched
+            "
+            formControlName="email"
+            placeholder="Enter the email"
+          />
+          @if (signupForm.get('email')?.hasError('required') && signupForm.get('email')?.touched) {
+            <div class="error-msg">This field is required</div>
+          }
+          @if (
+            !signupForm.get('email')?.hasError('required') &&
+            signupForm.get('email')?.hasError('pattern') &&
+            signupForm.get('email')?.touched
+          ) {
+            <div class="error-msg">Invalid Email</div>
+          }
+          @if (
+            !signupForm.get('email')?.hasError('required') &&
+            !signupForm.get('email')?.hasError('pattern') &&
+            signupForm.get('email')?.hasError('emailExists') &&
+            signupForm.get('email')?.touched
+          ) {
+            <div class="error-msg">Email already exists</div>
+          }
+        </div>
+
+        <div class="flex flex-column gap-5">
+          <p class="font-14">Password</p>
+
+          <input
+            id="password"
+            type="password"
+            class="input-box"
+            [class.input-box-highlight]="!signupForm.get('password')?.hasError('required')"
+            [class.invalid-input-box]="
+              (signupForm.get('password')?.hasError('required') ||
+                signupForm.get('password')?.hasError('pattern')) &&
+              signupForm.get('password')?.touched
+            "
+            formControlName="password"
+            placeholder="Enter the password"
+          />
+          @if (
+            signupForm.get('password')?.hasError('required') && signupForm.get('password')?.touched
+          ) {
+            <div class="error-msg">This field is required</div>
+          }
+          @if (
+            !signupForm.get('password')?.hasError('required') &&
+            signupForm.get('password')?.hasError('pattern') &&
+            signupForm.get('password')?.touched
+          ) {
+            <div class="error-msg">
+              Password atleast contain one uppercase, lowercase, digit and special character. It
+              should atleast 8 characters.
+            </div>
+          }
+        </div>
+
+        <div class="flex flex-column gap-5">
+          <p class="font-14">Mobile Number</p>
+          <input
+            id="phoneNo"
+            class="input-box"
+            [class.input-box-highlight]="!signupForm.get('phoneNo')?.hasError('required')"
+            [class.invalid-input-box]="
+              (signupForm.get('phoneNo')?.hasError('required') ||
+                signupForm.get('phoneNo')?.hasError('pattern')) &&
+              signupForm.get('phoneNo')?.touched
+            "
+            formControlName="phoneNo"
+            placeholder="Enter the mobile number"
+          />
+          @if (
+            signupForm.get('phoneNo')?.hasError('required') && signupForm.get('phoneNo')?.touched
+          ) {
+            <div class="error-msg">This field is required</div>
+          }
+          @if (
+            !signupForm.get('phoneNo')?.hasError('required') &&
+            signupForm.get('phoneNo')?.hasError('pattern') &&
+            signupForm.get('phoneNo')?.touched
+          ) {
+            <div class="error-msg">
+              Only numbers are allowed. Minimum 10 and maximum 12 digits are allowed
+            </div>
+          }
+        </div>
+      </form>
+      <div class="flex flex-content-center gap-10">
+        <button class="button" routerLink="/login" [disabled]="isLoading">Cancel</button>
+        <button
+          class="button primary-bg text-white"
+          (click)="signUp()"
+          [class.loading-button]="isLoading"
+          [disabled]="isLoading"
+        >
+          Create a new account
+          @if (isLoading) {
+            <app-loader class="absolute"></app-loader>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

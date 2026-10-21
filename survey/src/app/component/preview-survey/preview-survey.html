@@ -1,0 +1,158 @@
+<div class="flex flex-column gap-20 page-container">
+  <div class="flex flex-column gap-15">
+    <div class="flex flex-content-between px-10">
+      <h2 class="no-margin fw-500">
+        {{ survey.name }}
+      </h2>
+      <button class="button" (click)="backToSurvey()">Back</button>
+    </div>
+    @if (survey.description) {
+      <p class="sub-text">{{ survey.description }}</p>
+    }
+  </div>
+  @if (survey.userName || survey.email || survey.dob || survey.phoneNo) {
+    <div class="flex flex-wrap gap-20 border-gray rounded-10 p-20">
+      @if (survey.userName) {
+        <div class="flex flex-column gap-5 question-width">
+          <p class="font-14">
+            Name&nbsp;
+            @if (survey.userNameReq) {
+              <span class="font-14">(Required<span class="is-required">*</span>)</span>
+            }
+          </p>
+          <input class="input-box input-box-highlight" placeholder="Enter your name" />
+        </div>
+      }
+      @if (survey.email) {
+        <div class="flex flex-column gap-5 question-width">
+          <p class="font-14">
+            Email&nbsp;
+            @if (survey.emailReq) {
+              <span class="font-14">(Required<span class="is-required">*</span>)</span>
+            }
+          </p>
+          <input class="input-box input-box-highlight" placeholder="Enter your email" />
+        </div>
+      }
+      @if (survey.dob) {
+        <div class="flex flex-column gap-5 question-width">
+          <p class="font-14">
+            Date of Birth&nbsp;
+            @if (survey.dobReq) {
+              <span class="font-14">(Required<span class="is-required">*</span>)</span>
+            }
+          </p>
+          <div class="flex">
+            <input class="input-box input-box-highlight flex-grow-1" [matDatepicker]="picker" />
+            <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+        </div>
+      }
+      @if (survey.phoneNo) {
+        <div class="flex flex-column gap-5 question-width">
+          <p class="font-14">
+            Phone Number&nbsp;
+            @if (survey.phoneNoReq) {
+              <span class="font-14">(Required<span class="is-required">*</span>)</span>
+            }
+          </p>
+          <input class="input-box input-box-highlight" placeholder="Enter your phone number" />
+        </div>
+      }
+    </div>
+  }
+  <div class="flex flex-wrap gap-20">
+    @for (item of survey.questions; track item; let i = $index) {
+      <div class="flex gap-5 border-gray rounded-10 p-10 question-width">
+        <span>{{ i + 1 }}.</span>
+        <div class="flex flex-column gap-15 flex-grow-1">
+          <p>
+            {{ item.question }}&nbsp;
+            @if (item.isrequired) {
+              <span class="font-14">(Required<span class="is-required">*</span>)</span>
+            }
+          </p>
+          @if (item.type === 'Star' || item.type === 'Number') {
+            <p class="gray">Rate</p>
+            @if (item.type === 'Number') {
+              <div class="flex flex-wrap gap-10">
+                @for (range of item.rating; track range; let j = $index) {
+                  <p
+                    class="py-20 px-10 border-gray rounded-10 pointer"
+                    [ngClass]="{
+                      'selected-number': range.isSelected,
+                      'hover-number': !range.isSelected,
+                    }"
+                    (click)="selectedNumber(i, j)"
+                  >
+                    {{ range.option }}
+                  </p>
+                }
+              </div>
+            }
+            @if (item.type === 'Star') {
+              <div class="flex flex-wrap gap-20">
+                @for (range of item.rating; track range; let j = $index) {
+                  <span class="flex flex-items-center pointer" (click)="selectedStar(i, j)">
+                    @if (range.isSelected) {
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="rgb(253, 220, 6)"
+                          d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21z"
+                        />
+                      </svg>
+                    }
+                    @if (!range.isSelected) {
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        class="svg-color"
+                      >
+                        <path
+                          d="m22 9.24l-7.19-.62L12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21L12 17.27L18.18 21l-1.63-7.03zM12 15.4l-3.76 2.27l1-4.28l-3.32-2.88l4.38-.38L12 6.1l1.71 4.04l4.38.38l-3.32 2.88l1 4.28z"
+                        />
+                      </svg>
+                    }
+                  </span>
+                }
+              </div>
+            }
+          } @else if (item.type === 'Comment') {
+            <div class="flex flex-column gap-5">
+              <p class="gray">Comment</p>
+              <textarea class="input-box input-box-highlight width-50" maxlength="300"></textarea>
+            </div>
+          } @else {
+            <div class="flex flex-column gap-5">
+              <p class="gray">Choose the following options</p>
+              @if (item.type === 'select-one') {
+                @for (option of item.options; track option) {
+                  <div class="flex flex-items-center gap-5 px-5">
+                    <input type="radio" name="option.name" />
+                    <p>{{ option.name }}</p>
+                  </div>
+                }
+              }
+              @if (item.type === 'select-multiple') {
+                @for (option of item.options; track option) {
+                  <div class="flex flex-items-center gap-5 px-5">
+                    <input type="checkbox" name="option.name" />
+                    <p>{{ option.name }}</p>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

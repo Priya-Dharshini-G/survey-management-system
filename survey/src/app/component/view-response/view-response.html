@@ -1,0 +1,43 @@
+<div class="flex flex-wrap gap-20 page-container">
+  @for (item of responses(); track item.id; let i = $index) {
+    <div class="flex flex-column gap-5 border-gray rounded-10 p-15">
+      @for (question of item.questions; track question.questionId; let j = $index) {
+        <div class="flex gap-5 mb-10">
+          <span>{{ j + 1 }}.</span>
+          <div class="flex flex-column gap-15 flex-grow-1">
+            <p>{{ question.question }}</p>
+            @if (question.type === 'Star' || question.type === 'Number') {
+              <div class="flex gap-5">
+                <p class="gray">Rating:</p>
+                <p class="fw-500">
+                  {{ question.answer ? question.answer : 'Not answering' }}
+                  {{ question.answer ? 'out of' : '' }}
+                  {{ question.answer ? question.rate : '' }}
+                </p>
+              </div>
+            } @else if (question.type === 'Comment') {
+              <div class="flex flex-column gap-5">
+                <p class="gray">Comment:</p>
+                <p class="fw-500 font-15 comment-width">{{ question.answer }}</p>
+              </div>
+            } @else {
+              <div class="flex gap-5">
+                <p class="gray">Options:</p>
+                @for (option of question.options; track option; let k = $index) {
+                  <p>
+                    @if (option.isSelected) {
+                      <span class="fw-500"> {{ option.name }}</span>
+                    } @else {
+                      <span> {{ option.name }}</span>
+                    }
+                    {{ k !== question.options.length - 1 ? ',' : '.' }}
+                  </p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

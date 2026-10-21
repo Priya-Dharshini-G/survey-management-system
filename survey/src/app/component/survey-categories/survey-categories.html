@@ -1,0 +1,87 @@
+<div class="page-container">
+  <div class="flex flex-content-between">
+    <div class="flex flex-column">
+      <h3 class="no-margin fw-500">Survey Categories</h3>
+      <p class="sub-text">
+        You can take survey on the below listed categories with default questions.
+      </p>
+    </div>
+    <button class="button primary-bg text-white" (click)="navigateCreateCategory()">
+      Create Category
+    </button>
+  </div>
+
+  @if (!pageLoader()) {
+    <div class="flex flex-wrap gap-20 mt-20">
+      @for (item of categories(); track item; let i = $index) {
+        <div class="flex flex-column gap-10 pointer card" (click)="navigateCategory(item.id)">
+          <div class="flex flex-items-center gap-4">
+            <svg class="svg-icon">
+              <use
+                [attr.xlink:href]="'external-icons.svg#' + svgIconName[i]"
+                [style.color]="colors[i]"
+              ></use>
+            </svg>
+            <p class="fw-500" [style.color]="colors[i]">{{ item.name }}</p>
+          </div>
+          <div class="flex flex-grow-1 p-5">
+            <p class="font-14 ls-35">"{{ item.description }}"</p>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="flex flex-column">
+      <h3 h3 class="fw-500">Custom Categories</h3>
+      @if (customCategories().length) {
+        <div class="flex flex-wrap gap-20">
+          @for (item of customCategories(); track item; let i = $index) {
+            <div class="flex flex-column gap-10 pointer card">
+              <div class="flex flex-content-between">
+                <div class="flex flex-items-center gap-4">
+                  <svg class="svg-icon">
+                    <use xlink:href="external-icons.svg#feedback" style="color: #ae6a51"></use>
+                  </svg>
+                  <p class="fw-500" style="color: #ae6a51">{{ item.name }}</p>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  [matMenuTriggerFor]="menu"
+                >
+                  <g fill="none" stroke="gray" strokeWidth="1.5">
+                    <circle cx="12" cy="4" r="1" transform="rotate(90 12 4)" />
+                    <circle cx="10" cy="12" r="1" transform="rotate(90 12 12)" />
+                    <circle cx="8" cy="20" r="1" transform="rotate(90 12 20)" />
+                  </g>
+                </svg>
+                <mat-menu #menu="matMenu">
+                  <div mat-menu-item (click)="navigateCategory(item.id)">Go to Survey</div>
+                  <div mat-menu-item (click)="navigateToEditCategory(item.id)">Edit</div>
+                  <div mat-menu-item (click)="deleteCategory(item.id)">Delete</div>
+                </mat-menu>
+              </div>
+              <div class="flex flex-grow-1 p-5">
+                <p class="font-14 ls-35">"{{ item.description }}"</p>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="flex flex-column flex-content-center flex-items-center">
+          <img src="/no-data.png" width="170" height="170" class="rounded-50" />
+          <p class="text-align-center font-14 gray">
+            No custom categories created yet!
+            <br />Click <span class="fw-400">Create Category button</span> to create a new one.
+          </p>
+        </div>
+      }
+    </div>
+  }
+  @if (pageLoader()) {
+    <div class="flex flex-content-center p-20">
+      <img src="/loading-spinner.gif" width="70" height="70" />
+    </div>
+  }
+</div>

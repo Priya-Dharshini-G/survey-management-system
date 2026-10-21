@@ -1,0 +1,46 @@
+<div class="page-container">
+  <div class="flex flex-content-between flex-items-center">
+    <h2 class="no-margin">Settings</h2>
+    <img
+      src="/profile2.webp"
+      width="40"
+      height="40"
+      class="rounded-50 border-gray"
+      (click)="openDialog()"
+    />
+  </div>
+
+  <mat-tab-group (selectedTabChange)="selectTab($event)">
+    @for (tab of tabs; track tab) {
+      <mat-tab [label]="tab"> </mat-tab>
+    }
+  </mat-tab-group>
+  <router-outlet></router-outlet>
+</div>
+<ng-template #profileTemplate let-data>
+  <div class="flex flex-column height-100">
+    <div class="flex flex-content-between flex-items-center p-15 border-gray">
+      <h3 class="no-margin">Profile</h3>
+      <span className="flex flex-items-center pointer" (click)="closeDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 22">
+          <path
+            fill="none"
+            stroke="gray"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M18 6L6 18m12 0L6 6"
+          />
+        </svg>
+      </span>
+    </div>
+    <div class="flex flex-column flex-content-center flex-items-center gap-10">
+      <img src="/profile2.webp" width="150" height="150" class="rounded-50" />
+      <div class="flex flex-column">
+        <p class="text-align-center font-14">{{ data.firstName }} {{ data.LastName }}</p>
+        <p class="text-align-center font-14">{{ data.email }}</p>
+      </div>
+      <button class="button primary-bg text-white" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</ng-template>
