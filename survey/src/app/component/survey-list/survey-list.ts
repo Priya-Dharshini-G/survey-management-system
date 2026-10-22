@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { Subscription } from 'rxjs';
 import { Auth } from '../../auth/services/auth';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-survey-list',
@@ -62,7 +63,7 @@ export class SurveyList {
   /**
    * Variable which is used to store url.
    */
-  public link = 'http://localhost:4200/';
+  public link = environment.frontendUrl;
   /**
    * Variable which is used to store the dialog modal.
    */

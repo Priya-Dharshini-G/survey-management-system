@@ -15,6 +15,7 @@ import { Loader } from '../../shared/component/loader/loader';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
 import { Auth } from '../../auth/services/auth';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-create-survey',
   imports: [
@@ -104,7 +105,7 @@ export class CreateSurvey {
   /**
    * Variable which is used to store the url.
    */
-  private link = 'http://localhost:4200/';
+  private link = environment.frontendUrl;
   /**
    * Variable which is used to store the dialog modal.
    */
