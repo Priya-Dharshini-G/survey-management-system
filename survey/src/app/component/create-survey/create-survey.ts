@@ -267,7 +267,6 @@ export class CreateSurvey {
   removeQuestion(index: number, id?: number) {
     if (this.isUpdate() && id) {
       this.deletedQuestions.push({ id: id });
-      console.log(this.deletedQuestions);
     }
     this.questions.removeAt(index);
   }
@@ -288,7 +287,6 @@ export class CreateSurvey {
   removeOption(index: number, position: number, id?: number) {
     if (this.isUpdate() && id) {
       this.deletedOptions.push({ id: id });
-      console.log(this.deletedOptions);
     }
     this.getOptions(index).removeAt(position);
   }
@@ -357,7 +355,6 @@ export class CreateSurvey {
    * Method which is used to add questions.
    */
   addQuestions() {
-    console.log(this.selectedQuestions.length);
     if (this.selectedQuestions.length) {
       for (let i = 0; i < this.selectedQuestions.length; i++) {
         const question = { question: this.selectedQuestions[i].question };
@@ -476,40 +473,49 @@ export class CreateSurvey {
    */
   saveSurvey() {
     if (this.surveyForm.valid) {
-      this.isLoading.update((prev) => ({ ...prev, btn1: true }));
-      this.route.params.subscribe((res: any) => {
-        if (res && res.id) {
-          this.surveyForm.value.surveyCategoryId = Number(res.id);
-        }
-      });
-      this.surveyForm.value.status = 'Draft';
-      this.surveyForm.value.userId = this.authService.userId();
-      this.subscription.add(
-        this.surveyHttp.createSurvey(this.surveyForm.value).subscribe({
-          next: (res: any) => {
-            if (res && res.success) {
+      if (this.surveyForm.value.questions.length) {
+        this.isLoading.update((prev) => ({ ...prev, btn1: true }));
+        this.route.params.subscribe((res: any) => {
+          if (res && res.id) {
+            this.surveyForm.value.surveyCategoryId = Number(res.id);
+          }
+        });
+        this.surveyForm.value.status = 'Draft';
+        this.surveyForm.value.userId = this.authService.userId();
+        this.subscription.add(
+          this.surveyHttp.createSurvey(this.surveyForm.value).subscribe({
+            next: (res: any) => {
+              if (res && res.success) {
+                this.isLoading.update((prev) => ({ ...prev, btn1: false }));
+                this.snackbar.openFromComponent(Snackbar, {
+                  verticalPosition: 'top',
+                  duration: 5000,
+                  data: { message: res.message },
+                  panelClass: 'success-snackbar',
+                });
+                this.surveyForm.reset();
+              }
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
               this.isLoading.update((prev) => ({ ...prev, btn1: false }));
               this.snackbar.openFromComponent(Snackbar, {
-                verticalPosition: 'top',
+                verticalPosition: 'bottom',
                 duration: 5000,
-                data: { message: res.message },
-                panelClass: 'success-snackbar',
+                data: { message: err.error.message },
+                panelClass: 'error-snackbar',
               });
-              this.surveyForm.reset();
-            }
-          },
-          error: (err: HttpErrorResponse) => {
-            console.log(err);
-            this.isLoading.update((prev) => ({ ...prev, btn1: false }));
-            this.snackbar.openFromComponent(Snackbar, {
-              verticalPosition: 'bottom',
-              duration: 5000,
-              data: { message: err.error.message },
-              panelClass: 'error-snackbar',
-            });
-          },
-        }),
-      );
+            },
+          }),
+        );
+      } else {
+        this.snackbar.openFromComponent(Snackbar, {
+          verticalPosition: 'bottom',
+          duration: 5000,
+          data: { message: 'Add a few questions to this survey. Questions cannot be empty.' },
+          panelClass: 'info-snackbar',
+        });
+      }
     } else {
       this.surveyForm.markAllAsTouched();
     }
@@ -559,47 +565,56 @@ export class CreateSurvey {
    */
   saveAndPublish() {
     if (this.surveyForm.valid) {
-      this.confirmDialogRef = this.dialog.open(this.confirmationTemplate, {
-        width: '400px',
-      });
-      this.confirmDialogRef.afterClosed().subscribe((result: boolean) => {
-        if (result) {
-          this.isLoading.update((prev) => ({ ...prev, btn2: true }));
-          this.route.params.subscribe((res: any) => {
-            if (res && res.id) {
-              this.surveyForm.value.surveyCategoryId = Number(res.id);
-            }
-          });
-          this.surveyForm.value.status = 'Published';
-          this.surveyForm.value.userId = this.authService.userId();
-          this.subscription.add(
-            this.surveyHttp.createSurvey(this.surveyForm.value).subscribe({
-              next: (res: any) => {
-                if (res && res.success && res.data && res.data.id) {
+      if (this.surveyForm.value.questions.length) {
+        this.confirmDialogRef = this.dialog.open(this.confirmationTemplate, {
+          width: '400px',
+        });
+        this.confirmDialogRef.afterClosed().subscribe((result: boolean) => {
+          if (result) {
+            this.isLoading.update((prev) => ({ ...prev, btn2: true }));
+            this.route.params.subscribe((res: any) => {
+              if (res && res.id) {
+                this.surveyForm.value.surveyCategoryId = Number(res.id);
+              }
+            });
+            this.surveyForm.value.status = 'Published';
+            this.surveyForm.value.userId = this.authService.userId();
+            this.subscription.add(
+              this.surveyHttp.createSurvey(this.surveyForm.value).subscribe({
+                next: (res: any) => {
+                  if (res && res.success && res.data && res.data.id) {
+                    this.isLoading.update((prev) => ({ ...prev, btn2: false }));
+                    this.snackbar.openFromComponent(Snackbar, {
+                      verticalPosition: 'top',
+                      duration: 5000,
+                      data: { message: res.message },
+                      panelClass: 'success-snackbar',
+                    });
+                    this.publishDialog(this.surveyForm.value.name, res.data.id);
+                  }
+                },
+                error: (err: HttpErrorResponse) => {
+                  console.log(err);
                   this.isLoading.update((prev) => ({ ...prev, btn2: false }));
                   this.snackbar.openFromComponent(Snackbar, {
-                    verticalPosition: 'top',
+                    verticalPosition: 'bottom',
                     duration: 5000,
-                    data: { message: res.message },
-                    panelClass: 'success-snackbar',
+                    data: { message: err.error.message },
+                    panelClass: 'error-snackbar',
                   });
-                  this.publishDialog(this.surveyForm.value.name, res.data.id);
-                }
-              },
-              error: (err: HttpErrorResponse) => {
-                console.log(err);
-                this.isLoading.update((prev) => ({ ...prev, btn2: false }));
-                this.snackbar.openFromComponent(Snackbar, {
-                  verticalPosition: 'bottom',
-                  duration: 5000,
-                  data: { message: err.error.message },
-                  panelClass: 'error-snackbar',
-                });
-              },
-            }),
-          );
-        }
-      });
+                },
+              }),
+            );
+          }
+        });
+      } else {
+        this.snackbar.openFromComponent(Snackbar, {
+          verticalPosition: 'bottom',
+          duration: 5000,
+          data: { message: 'Add a few questions to this survey. Questions cannot be empty.' },
+          panelClass: 'info-snackbar',
+        });
+      }
     } else {
       this.surveyForm.markAllAsTouched();
     }

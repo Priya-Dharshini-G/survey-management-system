@@ -64,7 +64,6 @@ export class ViewResponse {
                     }
                   });
                 });
-                console.log(this.responses());
               }
             },
             error: (err: HttpErrorResponse) => {

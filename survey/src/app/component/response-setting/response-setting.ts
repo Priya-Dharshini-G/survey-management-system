@@ -173,7 +173,6 @@ export class ResponseSetting {
    * Method which is used to edit the options.
    */
   editResponse(value: any) {
-    console.log('value', value);
     this.deleteOptions = [];
     this.formInitialize(value);
     this.openDialog('Edit', value);

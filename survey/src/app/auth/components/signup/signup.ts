@@ -53,7 +53,6 @@ export class Signup {
       password: new FormControl(null, [Validators.required, Validators.pattern(password)]),
       phoneNo: new FormControl(null, [Validators.required, Validators.pattern(phoneNumber)]),
     });
-    console.log(this.signupForm);
   }
   /**
    * Method which is used to create a new user.

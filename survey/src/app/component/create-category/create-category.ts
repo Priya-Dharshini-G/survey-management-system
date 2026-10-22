@@ -173,7 +173,6 @@ export class CreateCategory {
   updateCategory() {
     if (this.categoryForm.valid) {
       this.categoryForm.value.deletedQuestions = this.deletedQuestions;
-      console.log(this.categoryForm.value);
       this.isLoading.set(true);
       this.subscription.add(
         this.surveyClientService.updateCategory(this.categoryForm.value).subscribe({

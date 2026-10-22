@@ -108,7 +108,6 @@ export class SendMailDialog {
     }
     if (this.emails.length) {
       this.mailForm.get('to')?.patchValue(this.emails);
-      console.log(this.mailForm.value);
     } else {
       this.mailForm.markAllAsTouched();
     }
