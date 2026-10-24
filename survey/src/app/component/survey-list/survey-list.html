@@ -26,10 +26,10 @@
               <img src="/no-data.png" width="200" height="200" class="rounded-50" />
               <p>No survey created yet!</p>
             </div>
-          } @else {
+          } @else if (!pageLoader()) {
             <div class="flex flex-wrap gap-20 p-30">
               @for (item of survey(); track item.id) {
-                <div class="flex flex-column gap-10 card">
+                <div class="flex flex-column gap-10 survey-card">
                   <div class="flex flex-content-between flex-items-center">
                     <div class="flex flex-column">
                       <p class="font-15 bold">{{ item.name }}</p>

@@ -14,7 +14,10 @@
   @if (!pageLoader()) {
     <div class="flex flex-wrap gap-20 mt-20">
       @for (item of categories(); track item; let i = $index) {
-        <div class="flex flex-column gap-10 pointer card" (click)="navigateCategory(item.id)">
+        <div
+          class="flex flex-column gap-10 pointer category-card"
+          (click)="navigateCategory(item.id)"
+        >
           <div class="flex flex-items-center gap-4">
             <svg class="svg-icon">
               <use
@@ -35,7 +38,7 @@
       @if (customCategories().length) {
         <div class="flex flex-wrap gap-20">
           @for (item of customCategories(); track item; let i = $index) {
-            <div class="flex flex-column gap-10 pointer card">
+            <div class="flex flex-column gap-10 pointer category-card">
               <div class="flex flex-content-between">
                 <div class="flex flex-items-center gap-4">
                   <svg class="svg-icon">
