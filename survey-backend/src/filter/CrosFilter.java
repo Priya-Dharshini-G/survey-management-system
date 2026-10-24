@@ -15,7 +15,7 @@ public class CrosFilter implements Filter {
             ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        res.setHeader("Access-Control-Allow-Origin", "https://survey-management-78tu.onrender.com");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         chain.doFilter(request, response);
